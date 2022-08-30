@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const open = require('open');
 
 const pathKBP = '//asd/kbp/Сайт'; 
 
@@ -49,9 +50,7 @@ const openKbp = async () => {
 
   const pathWithLastDay = `${pathKBP}/${lastYear}/${lastMonth}/${lastDay}`;
 
-  console.log(pathWithLastDay);
-
-  
+  console.log(pathWithLastDay);  
 
 }
 const readDir = async (path) => {
