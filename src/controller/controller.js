@@ -23,10 +23,12 @@ export const getYear = async (mainPath) => {
 
 export const getMounth = async (pathWithYear) => {
   const monthsFolder = await readDir(pathWithYear);
-  const monthsFolderToNumber = monthsFolder.map((el) => Number(el.name.split('-')[0]));  
-  const maxMonthIndex = monthsFolderToNumber.indexOf(Math.max(...monthsFolderToNumber));
 
-  const lastMonth = monthsFolder[maxMonthIndex].name;
+  const onlyFolders = monthsFolder.filter((file) => file.isDirectory()); 
+  const monthsFolderToNumber = onlyFolders.map((el) => Number(el.name.split('-')[0]));  
+  const maxMonthIndex = monthsFolderToNumber.indexOf(Math.max(...monthsFolderToNumber));
+ 
+  const lastMonth = onlyFolders[maxMonthIndex].name;
   
   const pathWithLastMonth = path.join(pathWithYear, lastMonth);
 
@@ -46,18 +48,58 @@ export const getDay = async (pathWithMonth) => {
   return pathWithLastDay;
 }
 
-export const findLastPdf = async (fullPath) => {  
+export const findLastPdf = async (fullPath, fileName) => {  
   const PDFfiles = await readDir(fullPath);
   let openedFile;
   PDFfiles.forEach((pdf) => {
-    console.log(pdf.name.split('.')[1]);
-    if (pdf.name.split('.')[1] === 'pdf' && pdf.name.indexOf('КБП') != -1) {      
+    // console.log(pdf.name.split('.')[1]);
+    if (pdf.name.split('.')[1] === 'pdf' && pdf.name.indexOf(fileName) != -1) {      
       openedFile = pdf.name;
     }   
   })
   console.log(openedFile);
   const finalPath = path.join(fullPath, openedFile);
   await open(finalPath);
+}
+
+//////////////////////// AP ////////////////////
+
+export const getYearAp = async (mainPath) => {
+  const arrDirectory = [];
+  const yearsFolder = await readDir(mainPath);
+  yearsFolder.forEach((file) => {
+    if (file.isDirectory()) {
+      arrDirectory.push(file.name);
+    }   
+  })
+  const filteredArr = arrDirectory.filter((el) => el.indexOf('АП') !== -1);
+  const nameFolder = filteredArr[0].split(' - ')[0];
+  const numberArr = filteredArr.map((el) => Number(el.split(' - ')[1]));
+
+  const lastYear = Math.max(...numberArr).toString();
+  const lastYearFolder = `${nameFolder} - ${lastYear}`;  
+
+  return path.join(mainPath, lastYearFolder);
+}
+
+export const getDayAp = async (pathWithMonth) => {
+  const daysFolder = await readDir(pathWithMonth);
+  const onlyFolders = [];
+  let maxVal = 0;
+  let maxStr;
+  daysFolder.forEach((file) => {
+    if (file.isDirectory()) {
+      onlyFolders.push(file.name);
+    } 
+  })
+  onlyFolders.forEach((el => {
+    const numberDay = Number(el.split('.')[0]);
+    if (numberDay > maxVal){
+      maxVal = numberDay;
+      maxStr = el;
+    }
+  }))
+  return path.join(pathWithMonth, maxStr);
 }
 
 const readDir = async (path) => {
