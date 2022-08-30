@@ -37,22 +37,41 @@ const openKbp = async () => {
 
   const lastMonth = monthsFolder[maxMonthIndex].name;
   
-  const pathWithLastMonth = `${pathKBP}/${lastYear}/${lastMonth}`;
-
+  const pathWithLastMonth = path.join(pathKBP, lastYear, lastMonth);
   const daysFolder = await readDir(pathWithLastMonth);
-
-  console.log(daysFolder);
 
   const daysArr = daysFolder.map((day) => Number(day.name));
   const maxDaysIndex = daysArr.indexOf(Math.max(...daysArr));
-  console.log(maxDaysIndex); 
+  
   const lastDay = daysFolder[maxDaysIndex].name;
 
-  const pathWithLastDay = `${pathKBP}/${lastYear}/${lastMonth}/${lastDay}`;
+  const pathWithLastDay = path.join(pathKBP, lastYear, lastMonth, lastDay);
 
-  console.log(pathWithLastDay);  
+  const PDFfiles = await readDir(pathWithLastDay);
+  console.log('PDFfiles', PDFfiles);
+  let openedFile = '';
+  // const arrNames = PDFfiles.map((file) => file.name);
+  const arrNames = [];
 
+  const onlyPDF = [];
+
+  PDFfiles.forEach((pdf) => {
+    console.log(pdf.name.split('.')[1]);
+    if (pdf.name.split('.')[1] === 'pdf' && pdf.name.indexOf('КБП') != -1) {      
+      openedFile = pdf.name;
+    }
+   
+  })
+  console.log('openedFile', openedFile);
+  
+  const finalPath = path.join(pathKBP, lastYear, lastMonth, lastDay, openedFile);
+  console.log(finalPath);
+
+  console.log(`${pathWithLastDay}/${openedFile}`);
+  // await open(`${pathWithLastDay}/${openedFile}`, {wait: true} );
+  await open(finalPath);
 }
+
 const readDir = async (path) => {
   let files;
   try {
@@ -63,9 +82,6 @@ const readDir = async (path) => {
   return files;
 }
 
-const getLastYear = () => {
-
-};
 
 openKbp();
 
