@@ -16,11 +16,11 @@ const run = () => {
     openKbp(newspapers.KBP);
   }, 500);
   setTimeout(() => {
-    console.log('find KBP');
+    console.log('find AP');
     openAp(newspapers.AP);
   }, 3000);
   setTimeout(() => {
-    console.log('find KBP');
+    console.log('find Zaman');
     openZaman(newspapers.ZAMAN);
   }, 6000);
   
