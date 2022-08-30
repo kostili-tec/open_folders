@@ -28,9 +28,28 @@ const openKbp = async () => {
   console.log(pathWithLastYear);
   console.log('lastYearFolder', lastYearFolder);
 
-  const monthsArray = await readDir(pathWithLastYear);
+  const monthsFolder = await readDir(pathWithLastYear);
   // console.log(readDir(pathWithLastYear));
-  console.log('monthsArray', monthsArray);
+  // console.log('monthsFolder', monthsFolder);
+  const monthsFolderToNumber = monthsFolder.map((el) => Number(el.name.split('-')[0]));  
+  const maxMonthIndex = monthsFolderToNumber.indexOf(Math.max(...monthsFolderToNumber));
+
+  const lastMonth = monthsFolder[maxMonthIndex].name;
+  
+  const pathWithLastMonth = `${pathKBP}/${lastYear}/${lastMonth}`;
+
+  const daysFolder = await readDir(pathWithLastMonth);
+
+  console.log(daysFolder);
+
+  const daysArr = daysFolder.map((day) => Number(day.name));
+  const maxDaysIndex = daysArr.indexOf(Math.max(...daysArr));
+  console.log(maxDaysIndex); 
+  const lastDay = daysFolder[maxDaysIndex].name;
+
+  const pathWithLastDay = `${pathKBP}/${lastYear}/${lastMonth}/${lastDay}`;
+
+  console.log(pathWithLastDay);
 
   
 
