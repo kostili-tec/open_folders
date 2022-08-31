@@ -5,6 +5,7 @@ import open from 'open';
 
 const onlyNumbers = new RegExp('^[0-9]+$');
 
+let flag1 = process.argv[2];
 
 export const getYear = async (mainPath) => {
   const arrDirectory = [];
@@ -59,7 +60,11 @@ export const findLastPdf = async (fullPath, fileName) => {
   })
   console.log(openedFile);
   const finalPath = path.join(fullPath, openedFile);
-  await open(finalPath);
+  if (flag1 === 'folders') {
+    await open(fullPath)
+  } else {
+    await open(finalPath);
+  }
 }
 
 //////////////////////// AP ////////////////////
